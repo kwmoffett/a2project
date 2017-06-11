@@ -1,0 +1,30 @@
+---
+title: "Interactive Vote Share Maps for the 2016 Presidential Election"
+author: "Kenneth W. Moffett"
+date: "June 10, 2017"
+output:
+  ioslides_presentation: default
+---
+
+## Trump Vote Share During the 2016 Presidential Election
+
+```{r, echo = FALSE, message = FALSE}
+library(plotly)
+data <- read.csv("Trump Vote.csv", header = TRUE)
+data$hover <- with(data, paste(state, '<br>', "State Winner: ", statewinner, '<br>', "Clinton Vote: ", clintonvote, '<br>', "Trump Vote: ", trumpvote, '<br>', "Other Candidates: ", othervote, "<br>"))
+borders <- list(color = toRGB("white"), width = 2)
+map_options <- list(scope = 'usa', projection = list(type = 'albers usa'), showlakes = TRUE, lakecolor = toRGB('white'))
+plot_geo(data, locationmode = 'USA-states') %>%
+add_trace(z= ~ data$trumpvote, text = ~ data$hover, locations = ~ data$code, color = ~ data$trumpvote, colors = 'Reds') %>%
+colorbar(title = "Vote Percentage") %>%
+layout(title = 'Data Source: <a href = "https://www.nytimes.com/elections/results/president">The New York Times</a>', geo = map_options)
+```
+
+## Clinton Vote Share During the 2016 Presidential Election
+
+```{r, echo = FALSE}
+plot_geo(data, locationmode = 'USA-states') %>%
+add_trace(z= ~ data$clintonvote, text = ~ data$hover, locations = ~ data$code, color = ~ data$clintonvote, colors = 'Blues') %>%
+colorbar(title = "Vote Percentage") %>%
+layout(title = 'Data Source: <a href = "https://www.nytimes.com/elections/results/president">The New York Times</a>', geo = map_options)
+```
